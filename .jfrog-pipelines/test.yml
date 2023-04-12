@@ -3,7 +3,7 @@ resources:
     type: GitRepo
     configuration:
       gitProvider: mygt                       # <-- replace with your integration
-      path: nikhil-oss/golden-image    # <-- replace with your repository name
+      path: nikhil-oss/glden-image    # <-- replace with your repository name
       branches:
         include: master
 
