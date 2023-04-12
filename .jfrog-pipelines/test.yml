@@ -7,6 +7,12 @@ resources:
       branches:
         include: master
 
+  - name: myPropertyBag
+    type: PropertyBag
+    configuration:
+      commitSha: 1
+      runID: 1 
+
   - name: dbp_image
     type: Image
     configuration:
