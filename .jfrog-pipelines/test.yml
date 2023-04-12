@@ -1,5 +1,5 @@
 resources:
-  - name: dbp_repo
+  - name: myFirstRepo
     type: GitRepo
     configuration:
       gitProvider: mygt                       # <-- replace with your integration
@@ -30,7 +30,7 @@ resources:
       buildName: dbp_build
       buildNumber: 1
 
-
+      
 pipelines:
   - name: my_first_pipeline
     steps:
@@ -39,7 +39,7 @@ pipelines:
         configuration:
           inputResources:
             # Sets up step to be triggered when there are commit events to myFirstRepo
-            - name: dbp_repo
+            - name: myFirstRepo
         execution:
           onExecute:
             # Data from input resources is available as env variables in the step
