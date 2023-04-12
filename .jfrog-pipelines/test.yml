@@ -1,3 +1,36 @@
+resources:
+  - name: dbp_repo
+    type: GitRepo
+    configuration:
+      gitProvider: mygt                       # <-- replace with your integration
+      path: nikhil-oss/jfrog-docker    # <-- replace with your repository name
+      branches:
+        include: master
+
+  - name: dbp_image
+    type: Image
+    configuration:
+      registry: myart                                # <-- replace with your artifactory integration
+      sourceRepository: clod-base-os               # <-- required if registry is Artifactory
+      imageName: eurekahealth.jfrog.io/clod-base-os/postgresql  # < -- replace with your image path and name
+      imageTag: latest
+      autoPull: true
+      
+  - name: dbp_build_info
+    type: BuildInfo
+    configuration:
+      sourceArtifactory: myart
+      buildName: dbp_build
+      buildNumber: 1    
+
+  - name: dbp_promoted_build_info
+    type: BuildInfo
+    configuration:
+      sourceArtifactory: myart
+      buildName: dbp_build
+      buildNumber: 1
+
+
 pipelines:
   - name: my_first_pipeline
     steps:
@@ -6,7 +39,7 @@ pipelines:
         configuration:
           inputResources:
             # Sets up step to be triggered when there are commit events to myFirstRepo
-            - name: myFirstRepo
+            - name: dbp_repo
         execution:
           onExecute:
             # Data from input resources is available as env variables in the step
