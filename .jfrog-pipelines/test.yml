@@ -13,29 +13,6 @@ resources:
       commitSha: 1
       runID: 1 
 
-  - name: dbp_image
-    type: Image
-    configuration:
-      registry: myart                                # <-- replace with your artifactory integration
-      sourceRepository: clod-base-os               # <-- required if registry is Artifactory
-      imageName: eurekahealth.jfrog.io/clod-base-os/postgresql  # < -- replace with your image path and name
-      imageTag: latest
-      autoPull: true
-      
-  - name: dbp_build_info
-    type: BuildInfo
-    configuration:
-      sourceArtifactory: myart
-      buildName: dbp_build
-      buildNumber: 1    
-
-  - name: dbp_promoted_build_info
-    type: BuildInfo
-    configuration:
-      sourceArtifactory: myart
-      buildName: dbp_build
-      buildNumber: 1
-
       
 pipelines:
   - name: my_first_pipeline
