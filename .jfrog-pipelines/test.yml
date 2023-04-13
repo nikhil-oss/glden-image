@@ -7,8 +7,7 @@ resources:
       gitProvider: {{ .Values.myRepo.gitProvider }}                       # <-- replace with your integration
       path: {{ .Values.myRepo.path }}   # <-- replace with your repository name
       branches:
-        include: master
-  
+        include: master  
   - name: al_image
     type: Image
     configuration:
@@ -17,14 +16,12 @@ resources:
       imageName: {{ .Values.alArtifact.image }}
       imageTag: latest
       autoPull: true
-  
   - name: al_build_info
     type: BuildInfo
     configuration:
       sourceArtifactory: {{ .Values.alArtifact.intkey }}
       buildName: al_build
       buildNumber: 1
-      
   - name: myFirstRepo
     type: GitRepo
     configuration:
@@ -32,13 +29,11 @@ resources:
       path: nikhil-oss/glden-image    # <-- replace with your repository name
       branches:
         include: master
-
   - name: myPropertyBag
     type: PropertyBag
     configuration:
       commitSha: 1
       runID: 1
-
 pipelines:
   - name: build_base_image
     steps:
@@ -54,7 +49,6 @@ pipelines:
           - name: dbp_repo
         integrations:
           - name: {{ .Values.alArtifact.intkey }}
-
     - name: docker_push_al
       type: DockerPush
       configuration:
@@ -66,7 +60,6 @@ pipelines:
           - name: docker_build_al
         outputResources:
           - name: al_image
-
     - name: publish_al_build
       type: PublishBuildInfo
       configuration:
@@ -74,7 +67,6 @@ pipelines:
            - name: docker_push_al
         outputResources:
           - name: al_build_info
-  
   - name: my_first_pipeline
     steps:
       - name: p1_s1
@@ -88,14 +80,11 @@ pipelines:
             # Data from input resources is available as env variables in the step
             - echo $res_myFirstRepo_commitSha
             # The next two commands add variables to run state, which is available to all downstream steps in this run
-            
             - add_run_variables current_runid=$run_id
             - add_run_variables commitSha=$res_myFirstRepo_commitSha
             # This variable is written to pipeline state in p1_s3.
             # So this will be empty during first run and will be set to prior run number in subsequent runs
-            
             - echo "Previous run ID is $prev_runid"
-
       - name: p1_s2
         type: Bash
         configuration:
@@ -105,7 +94,6 @@ pipelines:
           onExecute:
             # Demonstrates the availability of an env variable written to run state during p1_s1
             - echo $current_runid
-
       - name: p1_s3
         type: Bash
         configuration:
@@ -120,9 +108,7 @@ pipelines:
             - add_pipeline_variables prev_runid=$run_id
             # Uses an utility function to update the output resource with the commitSha that triggered this run
             # Dependent pipelines can be configured to trigger when this resource is updated
-            
             - write_output myPropertyBag commitSha=$commitSha runID=$current_runid
-
   - name: my_second_pipeline
     steps:
       - name: p2_s1
