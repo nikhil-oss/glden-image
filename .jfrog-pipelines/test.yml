@@ -1,4 +1,29 @@
+template: true   # required for local templates
+valuesFilePath: ./values.yml
 resources:
+  - name: dbp_repo
+    type: GitRepo
+    configuration:
+      gitProvider: {{ .Values.myRepo.gitProvider }}                       # <-- replace with your integration
+      path: {{ .Values.myRepo.path }}   # <-- replace with your repository name
+      branches:
+        include: master
+   - name: postgresql_image
+    type: Image
+    configuration:
+      registry: {{ .Values.alArtifact.intkey }}       
+      sourceRepository: {{ .Values.alArtifact.srepo }}
+      imageName: {{ .Values.alArtifact.image }}
+      imageTag: latest
+      autoPull: true
+  
+  - name: postgresql_build_info
+    type: BuildInfo
+    configuration:
+      sourceArtifactory: {{ .Values.alArtifact.intkey }}
+      buildName: postgresql_build
+      buildNumber: 1
+      
   - name: myFirstRepo
     type: GitRepo
     configuration:
@@ -14,6 +39,41 @@ resources:
       runID: 1
 
 pipelines:
+    - name: build_postgres_image
+    steps:
+      - name: postgresql_docker_build
+        type: DockerBuild
+        configuration:
+          affinityGroup: postgresql_group
+          dockerFileLocation: .
+          dockerFileName: {{ .Values.alArtifact.file }}
+          dockerImageName: {{ .Values.alArtifact.image }}
+          dockerImageTag: ${run_number}
+          inputResources:
+            - name: dbp_repo
+          integrations:
+            - name: {{ .Values.alArtifact.intkey }}
+
+      - name: docker_push_postgresql
+        type: DockerPush
+        configuration:
+          affinityGroup: postgresql_group
+          targetRepository: {{ .Values.alArtifact.srepo }}
+          integrations:
+            - name: {{ .Values.alArtifact.intkey }}
+          inputSteps:
+            - name: postgresql_docker_build
+          outputResources:
+            - name: postgresql_image
+
+      - name: publish_postgresql_build
+        type: PublishBuildInfo
+        configuration:
+          inputSteps:
+            - name: docker_push_postgresql
+          outputResources:
+            - name: postgresql_build_info
+            
   - name: my_first_pipeline
     steps:
       - name: p1_s1
