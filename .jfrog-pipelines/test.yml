@@ -42,7 +42,7 @@ resources:
 pipelines:
   - name: build_base_image
     steps:
-    - name: al_docker_build
+    - name: docker_build_al
       type: DockerBuild
       configuration:
         affinityGroup: al_group
@@ -63,7 +63,7 @@ pipelines:
         integrations:
           - name: {{ .Values.alArtifact.intkey }}
         inputSteps:
-          - name: al_docker_build
+          - name: docker_build_al
         outputResources:
           - name: al_image
 
