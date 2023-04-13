@@ -40,7 +40,7 @@ resources:
       runID: 1
 
 pipelines:
-  - name: build_postgres_image
+  - name: build_base_image
     steps:
     - name: al_docker_build
       type: DockerBuild
