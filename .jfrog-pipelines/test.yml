@@ -8,7 +8,8 @@ resources:
       path: {{ .Values.myRepo.path }}   # <-- replace with your repository name
       branches:
         include: master
-   - name: postgresql_image
+  
+  - name: postgresql_image
     type: Image
     configuration:
       registry: {{ .Values.alArtifact.intkey }}       
@@ -39,41 +40,41 @@ resources:
       runID: 1
 
 pipelines:
-    - name: build_postgres_image
+  - name: build_postgres_image
     steps:
-      - name: postgresql_docker_build
-        type: DockerBuild
-        configuration:
-          affinityGroup: postgresql_group
-          dockerFileLocation: .
-          dockerFileName: {{ .Values.alArtifact.file }}
-          dockerImageName: {{ .Values.alArtifact.image }}
-          dockerImageTag: ${run_number}
-          inputResources:
-            - name: dbp_repo
-          integrations:
-            - name: {{ .Values.alArtifact.intkey }}
+    - name: postgresql_docker_build
+      type: DockerBuild
+      configuration:
+        affinityGroup: postgresql_group
+        dockerFileLocation: .
+        dockerFileName: {{ .Values.alArtifact.file }}
+        dockerImageName: {{ .Values.alArtifact.image }}
+        dockerImageTag: ${run_number}
+        inputResources:
+          - name: dbp_repo
+        integrations:
+          - name: {{ .Values.alArtifact.intkey }}
 
-      - name: docker_push_postgresql
-        type: DockerPush
-        configuration:
-          affinityGroup: postgresql_group
-          targetRepository: {{ .Values.alArtifact.srepo }}
-          integrations:
-            - name: {{ .Values.alArtifact.intkey }}
-          inputSteps:
-            - name: postgresql_docker_build
-          outputResources:
-            - name: postgresql_image
+    - name: docker_push_postgresql
+      type: DockerPush
+      configuration:
+        affinityGroup: postgresql_group
+        targetRepository: {{ .Values.alArtifact.srepo }}
+        integrations:
+          - name: {{ .Values.alArtifact.intkey }}
+        inputSteps:
+          - name: postgresql_docker_build
+        outputResources:
+          - name: postgresql_image
 
-      - name: publish_postgresql_build
-        type: PublishBuildInfo
-        configuration:
-          inputSteps:
-            - name: docker_push_postgresql
-          outputResources:
-            - name: postgresql_build_info
-            
+    - name: publish_postgresql_build
+      type: PublishBuildInfo
+      configuration:
+        inputSteps:
+           - name: docker_push_postgresql
+        outputResources:
+          - name: postgresql_build_info
+  
   - name: my_first_pipeline
     steps:
       - name: p1_s1
