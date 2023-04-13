@@ -1,18 +1,6 @@
 myRepo:
   gitProvider: mygt
   path: nikhil-oss/glden-image
-  
-pgArtifact:
-  srepo: clod-base-os
-  image: eurekahealth.jfrog.io/clod-base-os/postgresql
-  file: Dockerfile-postgresql
-  intkey: myart
-
-pyArtifact:
-  srepo: clod-base-os
-  image: eurekahealth.jfrog.io/clod-base-os/python-3.10
-  file: Dockerfile
-  intkey: myart
 
 alArtifact:
   srepo: clod-base-os
