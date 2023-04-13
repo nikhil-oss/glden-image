@@ -37,36 +37,36 @@ resources:
 pipelines:
   - name: build_base_image
     steps:
-    - name: docker_build_al
-      type: DockerBuild
-      configuration:
-        affinityGroup: al_group
-        dockerFileLocation: .
-        dockerFileName: {{ .Values.alArtifact.file }}
-        dockerImageName: {{ .Values.alArtifact.image }}
-        dockerImageTag: ${run_number}
-        inputResources:
-          - name: dbp_repo
-        integrations:
-          - name: {{ .Values.alArtifact.intkey }}
-    - name: docker_push_al
-      type: DockerPush
-      configuration:
-        affinityGroup: al_group
-        targetRepository: {{ .Values.alArtifact.srepo }}
-        integrations:
-          - name: {{ .Values.alArtifact.intkey }}
-        inputSteps:
-          - name: docker_build_al
-        outputResources:
-          - name: al_image
-    - name: publish_al_build
-      type: PublishBuildInfo
-      configuration:
-        inputSteps:
-           - name: docker_push_al
-        outputResources:
-          - name: al_build_info
+      - name: docker_build_al
+        type: DockerBuild
+        configuration:
+          affinityGroup: al_group
+          dockerFileLocation: .
+          dockerFileName: {{ .Values.alArtifact.file }}
+          dockerImageName: {{ .Values.alArtifact.image }}
+          dockerImageTag: ${run_number}
+          inputResources:
+            - name: dbp_repo
+          integrations:
+            - name: {{ .Values.alArtifact.intkey }}
+      - name: docker_push_al
+        type: DockerPush
+        configuration:
+          affinityGroup: al_group
+          targetRepository: {{ .Values.alArtifact.srepo }}
+          integrations:
+            - name: {{ .Values.alArtifact.intkey }}
+          inputSteps:
+            - name: docker_build_al
+          outputResources:
+            - name: al_image
+      - name: publish_al_build
+        type: PublishBuildInfo
+        configuration:
+          inputSteps:
+            - name: docker_push_al
+          outputResources:
+            - name: al_build_info
   - name: my_first_pipeline
     steps:
       - name: p1_s1
