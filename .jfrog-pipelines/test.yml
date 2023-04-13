@@ -23,11 +23,6 @@ resources:
       sourceArtifactory: {{ .Values.alArtifact.intkey }}
       buildName: al_build
       buildNumber: 1
-  - name: myPropertyBag
-    type: PropertyBag
-    configuration:
-      commitSha: 1
-      runID: 1
 pipelines:
   - name: build_base_image
     steps:
@@ -61,15 +56,3 @@ pipelines:
             - name: docker_push_al
           outputResources:
             - name: al_build_info
-  - name: my_second_pipeline
-    steps:
-      - name: p2_s1
-        type: Bash
-        configuration:
-          inputResources:
-            # Sets up step to be triggered when myPropertyBag is updated
-            - name: myPropertyBag
-        execution:
-          onExecute:
-            # Retrieves the commitSha from input resource
-            - echo "CommitSha is $res_myPropertyBag_commitSha"
