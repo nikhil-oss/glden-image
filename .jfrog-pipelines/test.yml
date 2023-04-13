@@ -1,5 +1,6 @@
 template: true   # required for local templates
 valuesFilePath: ./values.yml
+
 resources:
   - name: dbp_repo
     type: GitRepo
@@ -7,7 +8,8 @@ resources:
       gitProvider: {{ .Values.myRepo.gitProvider }}                       # <-- replace with your integration
       path: {{ .Values.myRepo.path }}   # <-- replace with your repository name
       branches:
-        include: master  
+        include: master
+        
   - name: al_image
     type: Image
     configuration:
