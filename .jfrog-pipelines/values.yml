@@ -1,5 +1,5 @@
 myRepo:
-  gitProvider: mygt
+  gitProvider: MyNewGt
   path: nikhil-oss/glden-image
 
 alArtifact:
