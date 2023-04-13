@@ -9,7 +9,7 @@ resources:
       branches:
         include: master
   
-  - name: postgresql_image
+  - name: al_image
     type: Image
     configuration:
       registry: {{ .Values.alArtifact.intkey }}       
@@ -18,11 +18,11 @@ resources:
       imageTag: latest
       autoPull: true
   
-  - name: postgresql_build_info
+  - name: al_build_info
     type: BuildInfo
     configuration:
       sourceArtifactory: {{ .Values.alArtifact.intkey }}
-      buildName: postgresql_build
+      buildName: al_build
       buildNumber: 1
       
   - name: myFirstRepo
@@ -42,10 +42,10 @@ resources:
 pipelines:
   - name: build_postgres_image
     steps:
-    - name: postgresql_docker_build
+    - name: al_docker_build
       type: DockerBuild
       configuration:
-        affinityGroup: postgresql_group
+        affinityGroup: al_group
         dockerFileLocation: .
         dockerFileName: {{ .Values.alArtifact.file }}
         dockerImageName: {{ .Values.alArtifact.image }}
@@ -55,25 +55,25 @@ pipelines:
         integrations:
           - name: {{ .Values.alArtifact.intkey }}
 
-    - name: docker_push_postgresql
+    - name: docker_push_al
       type: DockerPush
       configuration:
-        affinityGroup: postgresql_group
+        affinityGroup: al_group
         targetRepository: {{ .Values.alArtifact.srepo }}
         integrations:
           - name: {{ .Values.alArtifact.intkey }}
         inputSteps:
-          - name: postgresql_docker_build
+          - name: al_docker_build
         outputResources:
-          - name: postgresql_image
+          - name: al_image
 
-    - name: publish_postgresql_build
+    - name: publish_al_build
       type: PublishBuildInfo
       configuration:
         inputSteps:
-           - name: docker_push_postgresql
+           - name: docker_push_al
         outputResources:
-          - name: postgresql_build_info
+          - name: al_build_info
   
   - name: my_first_pipeline
     steps:
