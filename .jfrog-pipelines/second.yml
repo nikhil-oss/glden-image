@@ -8,7 +8,7 @@ resources:
       path: nikhil-oss/glden-image
       branches:
         include: master
-  - name: myPropertyBag
+  - name: myPropertyBagNew
     type: PropertyBag
     configuration:
       commitSha: 1
@@ -47,7 +47,7 @@ pipelines:
           inputSteps:
             - name: p1_s2
           outputResources:
-            - name: myPropertyBag
+            - name: myPropertyBagNew
         execution:
           onExecute:
             - echo $current_runid
@@ -55,4 +55,4 @@ pipelines:
             - add_pipeline_variables prev_runid=$run_id
             # Uses an utility function to update the output resource with the commitSha that triggered this run
             # Dependent pipelines can be configured to trigger when this resource is updated
-            - write_output myPropertyBag commitSha=$commitSha runID=$current_runid
+            - write_output myPropertyBagNew commitSha=$commitSha runID=$current_runid
